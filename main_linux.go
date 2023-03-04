@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/base64"
 	"encoding/hex"
+	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/shirou/gopsutil/v3/host"
