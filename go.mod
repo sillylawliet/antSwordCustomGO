@@ -3,6 +3,7 @@ module goShellCustom
 go 1.20
 
 require (
+	github.com/CodyGuo/godaemon v0.0.0-20200413142854-c36b39fdd071
 	github.com/gin-gonic/gin v1.9.0
 	github.com/shirou/gopsutil/v3 v3.23.2
 	golang.org/x/text v0.7.0

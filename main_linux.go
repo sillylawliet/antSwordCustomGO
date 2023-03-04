@@ -417,7 +417,7 @@ func r404(c *gin.Context) {
 	c.String(200, "")
 }
 
-func main() {
+func ginserver() {
 	gin.SetMode(gin.ReleaseMode)
 	gin.DefaultWriter = io.Discard
 	r := gin.Default()
@@ -427,4 +427,20 @@ func main() {
 	if err3 != nil {
 		return
 	}
+}
+
+func init() {
+	goDaemon := flag.Bool("d", false, "-d=true")
+	flag.Parse()
+	if *goDaemon {
+		cmd := exec.Command(os.Args[0], flag.Args()...)
+		if err := cmd.Start(); err != nil {
+			os.Exit(1)
+		}
+		os.Exit(0)
+	}
+}
+
+func main() {
+	ginserver()
 }
