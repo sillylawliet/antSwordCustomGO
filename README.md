@@ -9,3 +9,8 @@ antSword Custom Shell by Go
 
 支持后台运行
 ./shell -d=true
+
+### 3.11 更新
+windows端加入shellcode执行功能，shellcode先进行base64编码再进行ascii hex十六进制编码
+在虚拟终端中使用如下方法执行：
+sh HEX_BASE_SHELLCODE

