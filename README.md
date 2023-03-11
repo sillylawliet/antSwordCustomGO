@@ -23,8 +23,8 @@ sh HEX_BASE_SHELLCODE
 ![image](https://user-images.githubusercontent.com/38403959/224484761-6d8b32e0-e399-4d7a-8503-12e641e36045.png)
 
 
-没加入上线功能之前（全绿）：
+linux版本（全绿）：
 ![image](https://user-images.githubusercontent.com/38403959/224486276-0c90d3a8-2233-4b9b-a258-7db1f2e4a812.png)
 
-加上之后（4个恶意软件）：
+windows版本（4个）：
 ![4d7620b351e3ca8cdad93655870c2fd](https://user-images.githubusercontent.com/38403959/224486307-8c899e32-573e-486f-b51f-9ead569bab95.png)
