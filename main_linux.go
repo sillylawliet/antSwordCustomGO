@@ -126,7 +126,7 @@ func ReadFileCode(path string) string {
 }
 
 func WriteFileCode(path string, content string) string {
-	file, err2 := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+	file, err2 := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	_ = file.Truncate(0)
 	_, _ = file.Seek(0, 0)
 	if err2 != nil {
@@ -178,7 +178,18 @@ func DownloadFileCode(path string) []byte {
 
 func UploadFileCode(path string, content string) string {
 	bs, _ := hex.DecodeString(content)
-	if err := os.WriteFile(path, bs, 0666); err != nil {
+	_, err2 := os.Stat(path)
+	if err2 != nil {
+		create, err := os.Create(path)
+		if err != nil {
+			return ""
+		}
+		create.Close()
+	}
+	fp, _ := os.OpenFile(path, os.O_APPEND|os.O_RDWR, os.ModeAppend|os.ModePerm)
+	defer fp.Close()
+	_, err := fp.Write(bs)
+	if err != nil {
 		return "0"
 	}
 	return "1"
