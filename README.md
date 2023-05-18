@@ -1,6 +1,8 @@
 # antSwordCustomGO
 antSword Custom Shell by Go
 
+欢迎star，欢迎issue
+
 蚁剑 custom shell
 ![image](https://user-images.githubusercontent.com/38403959/222891077-ab4ba862-d246-4b22-85bb-9691bc2b8913.png)
 
@@ -19,3 +21,10 @@ sh HEX_BASE_SHELLCODE
 ![image](https://user-images.githubusercontent.com/38403959/224484617-06938d85-3fd4-4899-99ca-b530a4152a5e.png)
 
 ![image](https://user-images.githubusercontent.com/38403959/224484761-6d8b32e0-e399-4d7a-8503-12e641e36045.png)
+
+
+linux版本（全绿）：
+![image](https://user-images.githubusercontent.com/38403959/224486276-0c90d3a8-2233-4b9b-a258-7db1f2e4a812.png)
+
+windows版本（4个）：
+![4d7620b351e3ca8cdad93655870c2fd](https://user-images.githubusercontent.com/38403959/224486307-8c899e32-573e-486f-b51f-9ead569bab95.png)
